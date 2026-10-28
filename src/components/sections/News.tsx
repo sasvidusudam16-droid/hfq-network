@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowUpRight, CalendarDays } from "lucide-react";
-import { news, type NewsPost } from "../../data/news";
+import { news as staticNews, type NewsPost } from "../../data/news";
 import FlyIn from "../ui/FlyIn";
 import PixelBackground from "../ui/PixelBackground";
 import Reveal from "../ui/Reveal";
@@ -96,7 +97,16 @@ function SmallCard({ post, i }: { post: NewsPost; i: number }) {
 }
 
 export default function News() {
-  const [featured, ...rest] = news;
+  const [posts, setPosts] = useState<NewsPost[]>(staticNews);
+
+  useEffect(() => {
+    fetch("/api/news")
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (Array.isArray(data) && data.length > 0) setPosts(data); })
+      .catch(() => undefined);
+  }, []);
+
+  const [featured, ...rest] = posts;
 
   if (!featured) return null;
 

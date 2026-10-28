@@ -98,10 +98,10 @@ export default function Footer() {
 				</Reveal>
 
 				<div className="footer-dev-row">
-					<div className="footer-dev" aria-label="Developed by from">
+					<a href="https://from.jakenetwork.xyz" target="_blank" rel="noreferrer" className="footer-dev" aria-label="Developed by from">
 						<span>Developed by</span>
 						<img src="/images/from-logo-white.svg" alt="from" />
-					</div>
+					</a>
 				</div>
 			</div>
 		</footer>

@@ -72,6 +72,7 @@ runuser -u "$APP_USER" -- npm --prefix "$APP_DIR" ci
 runuser -u "$APP_USER" -- npm --prefix "$APP_DIR" run build
 
 mkdir -p "$APP_DIR/public/uploads"
+touch "$APP_DIR/data/news.json" 2>/dev/null || true
 chown -R "$APP_USER":"$(id -gn "$APP_USER")" "$APP_DIR/data" "$APP_DIR/public/uploads"
 
 cat > "$SERVICE_FILE" <<EOF

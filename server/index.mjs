@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataFile = path.join(root, "data", "store-products.json");
+const newsFile = path.join(root, "data", "news.json");
 const uploadDir = path.join(root, "public", "uploads");
 const port = Number(process.env.API_PORT || 3001);
 const host = process.env.API_HOST || "0.0.0.0";
@@ -126,12 +127,43 @@ async function saveCatalog(catalog) {
   await fs.rename(temporaryFile, dataFile);
 }
 
+async function loadNews() {
+  return JSON.parse(await fs.readFile(newsFile, "utf8"));
+}
+
+async function saveNews(posts) {
+  const temporaryFile = `${newsFile}.${randomBytes(6).toString("hex")}.tmp`;
+  await fs.writeFile(temporaryFile, `${JSON.stringify(posts, null, 2)}\n`, { mode: 0o600 });
+  await fs.rename(temporaryFile, newsFile);
+}
+
+function validateNews(posts) {
+  if (!Array.isArray(posts)) return false;
+  const tags = new Set(["Update", "Event", "Season", "Store"]);
+  return posts.every((p) => {
+    if (!p || typeof p !== "object") return false;
+    if (typeof p.id !== "number" || typeof p.title !== "string" || typeof p.excerpt !== "string") return false;
+    if (typeof p.date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(p.date)) return false;
+    if (!tags.has(p.tag) || typeof p.image !== "string") return false;
+    if (p.url !== undefined && typeof p.url !== "string") return false;
+    return p.title.length > 0 && p.title.length <= 120 && p.excerpt.length <= 400 && p.image.length <= 500;
+  });
+}
+
 const server = createServer(async (request, response) => {
   const url = new URL(request.url || "/", `http://${request.headers.host || "localhost"}`);
   const pathname = url.pathname;
 
   if (request.method === "GET" && pathname === "/api/health") {
     return sendJson(response, 200, { ok: true });
+  }
+
+  if (request.method === "GET" && pathname === "/api/news") {
+    try {
+      return sendJson(response, 200, await loadNews(), { "Cache-Control": "no-cache" });
+    } catch {
+      return sendJson(response, 500, { error: "News could not be loaded." });
+    }
   }
 
   if (request.method === "GET" && pathname === "/api/store/products") {
@@ -196,6 +228,59 @@ const server = createServer(async (request, response) => {
         return sendJson(response, 200, { ok: true });
       } catch (error) {
         return sendJson(response, error.status || 400, { error: error.message || "Store changes could not be saved." });
+      }
+    }
+
+    if (request.method === "GET" && pathname === "/api/admin/news") {
+      try {
+        return sendJson(response, 200, await loadNews());
+      } catch {
+        return sendJson(response, 500, { error: "News could not be loaded." });
+      }
+    }
+
+    if (request.method === "PUT" && pathname === "/api/admin/news") {
+      try {
+        const posts = await readJson(request);
+        if (!validateNews(posts)) return sendJson(response, 400, { error: "News data is invalid." });
+        const ids = posts.map((p) => p.id);
+        if (new Set(ids).size !== ids.length) return sendJson(response, 400, { error: "Post IDs must be unique." });
+        await saveNews(posts);
+        return sendJson(response, 200, { ok: true });
+      } catch (error) {
+        return sendJson(response, error.status || 400, { error: error.message || "News could not be saved." });
+      }
+    }
+
+    if (request.method === "GET" && pathname === "/api/admin/images") {
+      try {
+        await fs.mkdir(uploadDir, { recursive: true });
+        const files = await fs.readdir(uploadDir);
+        const images = await Promise.all(
+          files.filter((f) => /\.(png|jpg|webp|gif)$/i.test(f)).map(async (f) => {
+            const stat = await fs.stat(path.join(uploadDir, f));
+            return { filename: f, url: `/uploads/${f}`, size: stat.size, created: stat.birthtimeMs };
+          })
+        );
+        images.sort((a, b) => b.created - a.created);
+        return sendJson(response, 200, images);
+      } catch {
+        return sendJson(response, 500, { error: "Could not list uploaded images." });
+      }
+    }
+
+    if (request.method === "DELETE" && pathname.startsWith("/api/admin/images/")) {
+      const filename = path.basename(pathname.slice("/api/admin/images/".length));
+      if (!filename || !/^[\w-]+\.(png|jpg|webp|gif)$/i.test(filename)) {
+        return sendJson(response, 400, { error: "Invalid filename." });
+      }
+      const target = path.join(uploadDir, filename);
+      if (!target.startsWith(`${uploadDir}${path.sep}`)) return sendJson(response, 400, { error: "Invalid path." });
+      try {
+        await fs.unlink(target);
+        return sendJson(response, 200, { ok: true });
+      } catch {
+        return sendJson(response, 404, { error: "Image not found." });
       }
     }
 

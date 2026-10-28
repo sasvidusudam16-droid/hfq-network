@@ -1,26 +1,26 @@
 # HFQ Network
 
-HFQ Network is a Minecraft Lifesteal SMP website built with React, Vite, and a small Node.js store API. The public website and API are served from one origin. The production server listens on port 3001 by default.
+HFQ Network is a Minecraft Lifesteal SMP website built with React, Vite, and a Node.js store API. The public website, store, and admin panel are all served from one origin. The production server listens on port 3001 by default.
 
 ## Deploy to an Ubuntu/Debian VPS
 
 ### Requirements
 
 - Ubuntu or Debian VPS with systemd, `sudo`, `openssl`, Node.js 22+ (or 20.19+), and npm.
-- The project checked out on the VPS under a regular, non-root deployment account. Do not clone the project into `/root`.
-- A domain pointed at the VPS. The current canonical domain in this project is `https://hfqmc.xyz/`; update it in `index.html`, `public/robots.txt`, `public/sitemap.xml`, and `src/components/Seo.tsx` if deploying on another domain.
+- The project checked out on the VPS under a regular, non-root deployment account. Do not clone into `/root`.
+- A domain pointed at the VPS. The canonical domain is `https://hfqmc.xyz/`; update it in `index.html`, `public/robots.txt`, `public/sitemap.xml`, and `src/components/Seo.tsx` if deploying under a different domain.
 
 ### Install and start
 
-From the project directory, run:
+From the project directory:
 
 ```bash
 sudo bash deploy.sh
 ```
 
-The script asks twice for a strong store-admin password without echoing it, generates a random session secret, installs locked npm dependencies, builds the site, and installs/enables a `systemd` service named `hfq-network`. The password must have at least 14 characters and use letters, numbers, or `._!@#%+=-`. App secrets are saved in `/etc/hfq-network.env` with root-only file permissions; do not commit or share that file. The website and API run as the deployment account, while the API binds to `127.0.0.1:3001` so it is not directly exposed to the internet.
+The script prompts for a strong store-admin password, generates a random session secret, installs dependencies, builds the site, and installs a `systemd` service named `hfq-network`. Secrets are saved in `/etc/hfq-network.env` with root-only permissions — do not commit or share that file. The API binds to `127.0.0.1:3001` and is not directly exposed to the internet.
 
-Check service health and logs:
+Check health and logs:
 
 ```bash
 curl http://127.0.0.1:3001/api/health
@@ -34,11 +34,11 @@ After pulling an update, rebuild and restart:
 npm ci && npm run build && sudo systemctl restart hfq-network
 ```
 
-The service needs persistent write access to `data/store-products.json` and `public/uploads/`. Back up both locations regularly; store edits and uploaded product images are not stored in the environment file.
+The service needs persistent write access to `data/store-products.json`, `data/news.json`, and `public/uploads/`. Back those up regularly — store edits, news posts, and uploaded images are not stored in the environment file.
 
 ### Domain, HTTPS, and reverse proxy
 
-Point the domain's A/AAAA records to the VPS. Configure Nginx or Caddy with a valid TLS certificate and proxy requests to `http://127.0.0.1:3001`. For Nginx, the important directives inside the TLS-enabled `server` block are:
+Point the domain's A/AAAA records at the VPS. Configure Nginx or Caddy with a TLS certificate and proxy requests to `http://127.0.0.1:3001`. For Nginx:
 
 ```nginx
 location / {
@@ -51,28 +51,48 @@ location / {
 }
 ```
 
-Obtain and renew the certificate with your preferred ACME client (for example, Certbot). Allow public inbound HTTP/HTTPS (ports 80 and 443) in the VPS firewall and provider firewall. Do **not** open port 3001 to the public. The admin session cookie is marked `Secure` in production, so sign in at `https://your-domain/admin` after HTTPS is working.
+Use Certbot or another ACME client for the certificate. Allow ports 80 and 443 in your firewall. Do **not** open port 3001 publicly. The admin session cookie is marked `Secure` in production, so sign in at `https://your-domain/admin` after HTTPS is set up.
 
-### Store admin
+### Admin panel
 
-Open `/admin` to manage product names, descriptions, prices, colors, artwork, purchase links, badges, and perks. Changes are saved to `data/store-products.json`; uploaded artwork is stored in `public/uploads/`. Store edits persist across restarts as long as those paths are on persistent writable disk.
+Open `/admin` to manage the store and news.
 
-The API uses an HttpOnly, SameSite session cookie, same-origin mutation checks, server-side validation, upload size/type checks, and basic login throttling. To change the admin password, edit `ADMIN_PASSWORD` in `/etc/hfq-network.env` and restart with `sudo systemctl restart hfq-network`. Protect that file and use a unique password.
+**Store** — edit ranks, upgrades, crate keys, and shards: names, descriptions, prices, colors, images, purchase links, badges, and perks. Products can be reordered and duplicated. Unsaved changes are highlighted; press **Ctrl+S** to save.
+
+**News** — create, edit, and reorder the news posts shown on the home page. Each post has a title, excerpt, date, tag, image, and optional link.
+
+**Images** — view all uploaded images, copy their URLs, or delete them.
+
+Changes are saved to `data/store-products.json` and `data/news.json`. Uploaded images are stored in `public/uploads/`. To change the admin password, update `ADMIN_PASSWORD` in `/etc/hfq-network.env` and restart the service.
 
 ## Google SEO and indexing
 
-The site includes a descriptive page title and description, canonical URLs, social share metadata, `WebSite`/`Organization` structured data, a sitemap at `https://hfqmc.xyz/sitemap.xml`, and a `robots.txt` sitemap reference. The `/admin` route sets `noindex` metadata. The social preview image is `public/images/og-image.webp`; keep it publicly available and update its absolute URL if the domain changes.
+The site includes a descriptive title, canonical URLs, social share metadata, `WebSite`/`Organization` structured data, a sitemap at `https://hfqmc.xyz/sitemap.xml`, and a `robots.txt` reference. The `/admin` route is set to `noindex`.
 
-To help Google discover the site:
+To get indexed by Google:
 
-1. Make sure the public domain resolves to this VPS and HTTPS works without certificate warnings.
-2. Open [Google Search Console](https://search.google.com/search-console), add and verify the domain property, and submit `https://hfqmc.xyz/sitemap.xml`.
-3. Use Search Console URL Inspection to request indexing of the homepage and check that Google can fetch the page and image.
-4. Keep the site useful, fast, mobile-friendly, and publicly accessible; link to it from official community profiles and relevant sites.
-5. If the domain changes, update every canonical, structured-data, sitemap, robots, and social-preview URL before deployment.
-
-The structured site name is **HFQ Network** (with “Hfq Network” as an alternate spelling). Google chooses whether and how to display a site name, title, description, and ranking; metadata and Search Console submission improve eligibility but cannot guarantee a particular display or first-page position. This React SPA updates titles and descriptions on navigation; Google can render JavaScript, but indexing may take time.
+1. Confirm the domain resolves to the VPS and HTTPS works without warnings.
+2. Open [Google Search Console](https://search.google.com/search-console), verify the domain, and submit the sitemap.
+3. Use URL Inspection to request indexing of the homepage.
+4. Keep the site fast, mobile-friendly, and publicly accessible; link to it from Discord and community profiles.
+5. If the domain changes, update every canonical, sitemap, robots, and social-preview URL before deploying.
 
 ## Local development
 
-Install dependencies with `npm ci`. In one terminal set `ADMIN_PASSWORD` and a random `SESSION_SECRET` of at least 32 characters, then run `npm run dev:api`; in another terminal run `npm run dev`. Vite forwards `/api` calls to the API on port 3001. Build for production with `npm run build`.
+```bash
+npm ci
+```
+
+In one terminal, set the required env vars and start the API:
+
+```bash
+ADMIN_PASSWORD=yourpassword SESSION_SECRET=a-random-string-at-least-32-chars npm run dev:api
+```
+
+In another terminal, start Vite:
+
+```bash
+npm run dev
+```
+
+Vite forwards `/api` requests to `localhost:3001`. Open `http://localhost:5173` for the site and `/admin` for the panel. Build for production with `npm run build`.
