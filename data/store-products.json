@@ -1,0 +1,267 @@
+{
+  "ranks": [
+    {
+      "id": "elite",
+      "name": "ELITE",
+      "price": "$1.99",
+      "description": "A strong start with extra homes, a custom nickname colour and an exclusive kit.",
+      "color": "#6fb5c4",
+      "dark": "#2c5561",
+      "image": "/images/ranks/elite.png",
+      "url": "https://discord.gg/yourinvite",
+      "popular": false,
+      "perks": [
+        "[ELITE] prefix",
+        "8 home slots",
+        "Custom nickname colour",
+        "Elite-only kit"
+      ]
+    },
+    {
+      "id": "heroic",
+      "name": "HEROIC",
+      "price": "$3.99",
+      "description": "More room to build your legacy, with a particle aura and reserved access.",
+      "color": "#a66bff",
+      "dark": "#4b2a8a",
+      "image": "/images/ranks/heroic.png",
+      "url": "https://discord.gg/yourinvite",
+      "popular": true,
+      "perks": [
+        "Everything in ELITE",
+        "[HEROIC] prefix",
+        "10 home slots",
+        "Heroic particle aura",
+        "Reserved slot when full"
+      ]
+    },
+    {
+      "id": "legend",
+      "name": "LEGEND",
+      "price": "$5.99",
+      "description": "The complete HFQ rank experience with premium cosmetics and a monthly key.",
+      "color": "#ff7a1a",
+      "dark": "#7a3000",
+      "image": "/images/ranks/legend.png",
+      "url": "https://discord.gg/yourinvite",
+      "popular": false,
+      "perks": [
+        "Everything in HEROIC",
+        "[LEGEND] prefix",
+        "15 home slots",
+        "Legend-only cosmetics",
+        "Free monthly crate key"
+      ]
+    }
+  ],
+  "upgrades": [
+    {
+      "id": "elite-heroic",
+      "from": "elite",
+      "to": "heroic",
+      "price": "$2.00",
+      "description": "Upgrade your ELITE rank to HEROIC.",
+      "url": "https://discord.gg/yourinvite",
+      "perks": [
+        "Upgrade from ELITE to HEROIC",
+        "Heroic prefix and aura",
+        "10 home slots",
+        "Keeps all your ELITE perks"
+      ]
+    },
+    {
+      "id": "heroic-legend",
+      "from": "heroic",
+      "to": "legend",
+      "price": "$4.00",
+      "description": "Upgrade your HEROIC rank to LEGEND.",
+      "url": "https://discord.gg/yourinvite",
+      "perks": [
+        "Upgrade from HEROIC to LEGEND",
+        "Legend prefix and cosmetics",
+        "15 home slots",
+        "Free monthly crate key"
+      ]
+    }
+  ],
+  "keys": [
+    {
+      "id": "key-blue",
+      "name": "Frost Key",
+      "price": "$2.99",
+      "description": "Unlock the Frost crate and its seasonal rewards.",
+      "color": "#3aa8ff",
+      "dark": "#1b4f8a",
+      "image": "/images/store/Screenshot_2026-10-17_212524.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "1x Frost crate key",
+        "Opens the Frost crate",
+        "Buy 5, get 1 free"
+      ]
+    },
+    {
+      "id": "key-purple",
+      "name": "Void Key",
+      "price": "$4.99",
+      "description": "Open the Void crate for a chance at rare loot.",
+      "color": "#a855ff",
+      "dark": "#4b2085",
+      "image": "/images/store/Screenshot_2026-10-17_212544.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "1x Void crate key",
+        "Opens the Void crate",
+        "Buy 5, get 1 free"
+      ]
+    },
+    {
+      "id": "key-red",
+      "name": "Blood Key",
+      "price": "$7.99",
+      "description": "The most popular way to unlock the Blood crate.",
+      "color": "#ff2d46",
+      "dark": "#6b0a16",
+      "image": "/images/store/Screenshot_2026-10-17_212605.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "Most Popular",
+      "perks": [
+        "1x Blood crate key",
+        "Opens the Blood crate",
+        "Buy 5, get 1 free"
+      ]
+    },
+    {
+      "id": "key-pink",
+      "name": "Rose Key",
+      "price": "$9.99",
+      "description": "A Rose crate key with access to its unique drops.",
+      "color": "#ff4fd8",
+      "dark": "#7a1a6a",
+      "image": "/images/store/Screenshot_2026-10-17_212623.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "1x Rose crate key",
+        "Opens the Rose crate",
+        "Buy 5, get 1 free"
+      ]
+    },
+    {
+      "id": "key-green",
+      "name": "Emerald Key",
+      "price": "$14.99",
+      "description": "Unlock the Emerald crate and discover its rarest rewards.",
+      "color": "#2ee6a0",
+      "dark": "#0f6b4a",
+      "image": "/images/store/Screenshot_2026-10-17_212639.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "1x Emerald crate key",
+        "Opens the Emerald crate",
+        "Buy 5, get 1 free"
+      ]
+    }
+  ],
+  "shards": [
+    {
+      "id": "shards-100",
+      "name": "100 Shards",
+      "price": "$1.99",
+      "description": "A quick top-up for the shard shop.",
+      "color": "#5b8cff",
+      "dark": "#1f3a99",
+      "image": "/images/store/Screenshot_2026-10-17_212137.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "100 Shards",
+        "Delivered instantly",
+        "Spend them in the shard shop"
+      ]
+    },
+    {
+      "id": "shards-250",
+      "name": "250 Shards",
+      "price": "$4.99",
+      "description": "More shards for your next shop pick.",
+      "color": "#7c6bff",
+      "dark": "#352a99",
+      "image": "/images/store/Screenshot_2026-10-17_212154.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "250 Shards",
+        "Delivered instantly",
+        "Spend them in the shard shop"
+      ]
+    },
+    {
+      "id": "shards-500",
+      "name": "500 Shards",
+      "price": "$9.99",
+      "description": "A good-value pack with bonus shards included.",
+      "color": "#a05cff",
+      "dark": "#4a2699",
+      "image": "/images/store/Screenshot_2026-10-17_212221.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "Best Value",
+      "perks": [
+        "500 Shards",
+        "+10% bonus shards",
+        "Delivered instantly"
+      ]
+    },
+    {
+      "id": "shards-1000",
+      "name": "1,000 Shards",
+      "price": "$19.99",
+      "description": "A larger shard pack with an extra 15% bonus.",
+      "color": "#3fb8ff",
+      "dark": "#175a80",
+      "image": "/images/store/Screenshot_2026-10-17_212237.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "1,000 Shards",
+        "+15% bonus shards",
+        "Delivered instantly"
+      ]
+    },
+    {
+      "id": "shards-2500",
+      "name": "2,500 Shards",
+      "price": "$44.99",
+      "description": "A substantial shard pack with a 20% bonus.",
+      "color": "#c15cff",
+      "dark": "#5a2680",
+      "image": "/images/store/Screenshot_2026-10-17_212251.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "2,500 Shards",
+        "+20% bonus shards",
+        "Delivered instantly"
+      ]
+    },
+    {
+      "id": "shards-5000",
+      "name": "5,000 Shards",
+      "price": "$89.99",
+      "description": "The largest shard bundle with a 25% bonus.",
+      "color": "#ff5cf0",
+      "dark": "#80267a",
+      "image": "/images/store/Screenshot_2026-10-17_212304.png",
+      "url": "https://discord.gg/yourinvite",
+      "tag": "",
+      "perks": [
+        "5,000 Shards",
+        "+25% bonus shards",
+        "Delivered instantly"
+      ]
+    }
+  ]
+}
