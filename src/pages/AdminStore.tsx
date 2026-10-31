@@ -168,12 +168,6 @@ export default function AdminStore() {
     setCatalog((c) => ({ ...c, [group]: c[group].map((p) => p.id === selected.id ? { ...p, [key]: value } : p) }));
   };
 
-  const _chooseGroup = (next: ProductGroup) => {
-    setGroup(next);
-    setSelectedId("");
-    setSection(next);
-    clearFeedback();
-  };
 
   const addProduct = () => {
     const p: Product = group === "upgrades"
