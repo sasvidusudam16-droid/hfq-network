@@ -1952,4 +1952,5 @@ html.a11y-light .hero-bg-img, html.a11y-light .news-img, html.a11y-light .a11y-d
   user-select: none;
 }
 .footer-dev img { height: 22px; width: auto; display: block; }
+.footer-dev-name { font: 700 1rem/1 var(--font-sans); color: #fff; letter-spacing: .02em; }
 @media (hover: hover) { .footer-dev:hover { opacity: 1; } }
