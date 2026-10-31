@@ -168,7 +168,7 @@ export default function AdminStore() {
     setCatalog((c) => ({ ...c, [group]: c[group].map((p) => p.id === selected.id ? { ...p, [key]: value } : p) }));
   };
 
-  const chooseGroup = (next: ProductGroup) => {
+  const _chooseGroup = (next: ProductGroup) => {
     setGroup(next);
     setSelectedId("");
     setSection(next);
@@ -408,8 +408,6 @@ export default function AdminStore() {
   const isNews = section === "news";
   const isImages = section === "images";
   const isStore = !isNews && !isImages;
-
-  const dirty = isNews ? newsDirty : isStore ? storeDirty : false;
 
   return (
     <main className="admin-shell">
